@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Game Kendali Suara: Kiri–Kanan</title>
+  <style>
+    body { text-align: center; font-family: Arial; margin-top: 40px; }
+    #game-area {
+      width: 400px; height: 200px;
+      border: 2px solid black; margin: auto; position: relative;
+    }
+    #player {
+      width: 40px; height: 40px;
+      background: blue; position: absolute; top: 80px; left: 180px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Game Kendali Suara: Kiri–Kanan</h1>
+  <p>Ucapkan "kiri" untuk bergerak ke kiri, "kanan" untuk bergerak ke kanan.</p>
+  <div id="game-area">
+    <div id="player"></div>
+  </div>
+
+  <script>
+    let player = document.getElementById("player");
+    let posisi = 180;
+
+    if ('webkitSpeechRecognition' in window) {
+      let recognition = new webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.lang = "id-ID";
+
+      recognition.onresult = function(event) {
+        let kata = event.results[event.results.length-1][0].transcript.trim().toLowerCase();
+        if (kata.includes("kiri")) {
+          posisi -= 20;
+        } else if (kata.includes("kanan")) {
+          posisi += 20;
+        }
+        if (posisi < 0) posisi = 0;
+        if (posisi > 360) posisi = 360;
+        player.style.left = posisi + "px";
+      };
+
+      recognition.start();
+    } else {
+      alert("Browser tidak mendukung speech recognition!");
+    }
+  </script>
+</body>
+</html>
